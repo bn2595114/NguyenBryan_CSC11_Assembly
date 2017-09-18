@@ -13,6 +13,9 @@
 #include <cstdlib>
 #include <stdio.h>
 #include <typeinfo>
+#include <string>
+#include <cstring>
+#include <iostream>
 using namespace std;
 
 /*
@@ -20,13 +23,17 @@ using namespace std;
  */
 int main(int argc, char** argv) {
 
-    int dec, nbase;
+    unsigned int dec, nbase;
     printf("Enter a decimal number\n");
     scanf("%u", &dec);  //storing unsigned decimal
     printf("Enter a new base between 2 and 36 inclusive\n");
     scanf("%u", &nbase); //storing new base
+    while(nbase>36 || nbase < 2){
+        printf("Please enter a base specified: ");
+        scanf("%u", &nbase);
+    }
     
-    char base[nbase]; // up to inputted base
+    char* base = new char[nbase]; // up to inputted base
     int base10[nbase];//base 10 up to inputted base
     for(int i=0; i<10; i++){ //filling array
         base[i] = '0' + i;
@@ -36,19 +43,35 @@ int main(int argc, char** argv) {
         base[i] = 'A'+ (i-10);
         base10[i] = i;
     }
-	
-	int size = (dec/nbase)+1
-    string val= ""; // maximum size of remainder array
-    int mltpl=0; // container for dec
-	while(mltpl>0){
-		mltpl = dec/nbase;
-		val = base[dec-(mltpl*nbase)]+val;
-		dec /= nbase;
-		if(dec==0 || dec==1)
-			val = "1"+val
-		
-	}
     
+        char val[100];
+        for(int i=0; i<100; i++)
+            val[i] = ' ';
+        val[99] = NULL; 
+    int mltpl=0; // container for dec
+    int rmndr=0;
+    int i=98;
+    
+    do{        
+	mltpl = dec/nbase;      
+        rmndr = dec - (mltpl*nbase);
+	val[i] = base[rmndr];
+	dec /= nbase;                           
+        i--;
+        
+      }while(mltpl>=1);
+
+      printf("In base %u, the value is: ", nbase);
+      int x=0;
+      while(x<99){
+          if(val[x]!=' ')
+      printf("%c", val[x]);
+      x++;
+      }
+      
+      
+
+      delete[] base;
     return 0;
 }
 
